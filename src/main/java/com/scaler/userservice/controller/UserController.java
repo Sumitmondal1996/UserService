@@ -1,5 +1,6 @@
 package com.scaler.userservice.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.scaler.userservice.dtos.*;
 import com.scaler.userservice.exceptions.TokenNotFoundException;
 import com.scaler.userservice.models.Token;
@@ -30,8 +31,7 @@ public class UserController {
         return Token.createtokenResponseDto(token);
     }
     @PostMapping("/signup")
-    public UserResponsedto signup(@RequestBody UserRequestdto userRequestdto)
-    {
+    public UserResponsedto signup(@RequestBody UserRequestdto userRequestdto) throws JsonProcessingException {
         User user=  userService.signup(
                 userRequestdto.getEmail(),
                 userRequestdto.getPassword()

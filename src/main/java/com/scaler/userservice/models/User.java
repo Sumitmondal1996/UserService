@@ -2,6 +2,7 @@ package com.scaler.userservice.models;
 
 import com.scaler.userservice.dtos.UserResponsedto;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToMany;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +17,7 @@ public class User extends BaseModel{
     private String email;
     private String password;
     private boolean verified;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER )
     private List<Role> roles;
 
     public static UserResponsedto toUserResponsedto(User user) {

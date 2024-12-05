@@ -37,6 +37,7 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 
 @Configuration
 @EnableWebSecurity
@@ -71,27 +72,35 @@ public class SecurityConfig {
     @Order(2)
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http)
             throws Exception {
-        http
-                .authorizeHttpRequests((authorize) -> authorize
-                        .anyRequest().authenticated()
-                )
-                // Form login handles the redirect to the login page from the
-                // authorization server filter chain
-                .formLogin(Customizer.withDefaults());
+//        http
+//                .authorizeHttpRequests((authorize) -> authorize
+//                        .anyRequest().authenticated()
+//                )
+//                // Form login handles the redirect to the login page from the
+//                // authorization server filter chain
+//                .formLogin(Customizer.withDefaults());
+//
+//        return http.build();
+
+                http
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> {
+                    auth.requestMatchers("/**").permitAll();
+                });
 
         return http.build();
     }
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails userDetails = User.withDefaultPasswordEncoder()
-                .username("user")
-                .password("password")
-                .roles("USER")
-                .build();
-
-        return new InMemoryUserDetailsManager(userDetails);
-    }
+//    @Bean
+//    public UserDetailsService userDetailsService() {
+//        UserDetails userDetails = User.withDefaultPasswordEncoder()
+//                .username("user")
+//                .password("password")
+//                .roles("USER")
+//                .build();
+//
+//        return new InMemoryUserDetailsManager(userDetails);
+//    }
 
 //    @Bean
 //    public RegisteredClientRepository registeredClientRepository() {
@@ -120,7 +129,7 @@ public class SecurityConfig {
                 .privateKey(privateKey)
                 .keyID(UUID.randomUUID().toString())
                 .build();
-        JWKSet jwkSet = new JWKSet(rsaKey);
+        JWKSet jwkSet =  new JWKSet(rsaKey);
         return new ImmutableJWKSet<>(jwkSet);
     }
 
